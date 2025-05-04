@@ -1,0 +1,9 @@
+# ninja log v6
+2	716	7680314994452874	CMakeFiles/Data_Structures_Project_2.dir/Problem_1.cpp.obj	eb466ea749f16c4a
+718	875	7680315001613394	Data_Structures_Project_2.exe	ee731958d669ba61
+10	3784	7680323442902469	CMakeFiles/Problem_2.dir/Problem_2.cpp.obj	b9cc05e115a5f941
+3788	3946	7680323480685885	Problem_2.exe	ee5f30db60ca043d
+12	3263	7680324394233222	CMakeFiles/Problem_3.dir/Problem_3.cpp.obj	e77033131a48329c
+3264	3394	7680324426746991	Problem_3.exe	a417350a40407ff7
+20	3594	7680324472417835	CMakeFiles/Problem_4.dir/Problem_4.cpp.obj	8d7c24016343e821
+3595	3708	7680324508162234	Problem_4.exe	7b10938235d13c52
