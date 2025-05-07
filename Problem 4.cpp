@@ -85,11 +85,13 @@ public:
         for (int i = 0; i < size; i++) {
             cout << heap[i].name << " ";
         }
-        cout << endl;
+        cout << "\n\n";
     }
 };
 
 int main() {
+    cout << "The doctor's original example:\n\n";
+
     ifstream inFile("Problem 4.txt");
     if (!inFile) {
         cerr << "Cannot open file.\n";
@@ -102,6 +104,7 @@ int main() {
     while (inFile >> patients[count].name >> patients[count].severity >> patients[count].arrival_time) {
         count++;
     }
+    inFile.close();
 
     for (int i = 0; i < count; i++) {
         cout << "Inserting: " << patients[i].name << endl;
@@ -117,5 +120,35 @@ int main() {
         cout << "Treating: " << treated.name << endl;
     }
 
+    cout << "========================================================\n";
+    cout << "Added test case:\n\n";
+
+    ifstream testCase("Problem 4 Test Case.txt");
+    if (!testCase) {
+        cerr << "Cannot open file.\n";
+        return 1;
+    }
+
+    MaxHeap emergencyRoom2;
+    Patient patients2[100];
+    int count2 = 0;
+    while (testCase >> patients2[count2].name >> patients2[count2].severity >> patients2[count2].arrival_time) {
+        count2++;
+    }
+    testCase.close();
+
+    for (int i = 0; i < count2; i++) {
+        cout << "Inserting: " << patients2[i].name << endl;
+        emergencyRoom2.insert(patients2[i]);
+        cout << "Heap: ";
+        emergencyRoom2.print_heap();
+    }
+
+    cout << "Treatment Order:" << endl;
+    while (true) {
+        Patient treated2 = emergencyRoom2.extract_max();
+        if (treated2.severity == -1) break;
+        cout << "Treating: " << treated2.name << endl;
+    }
     return 0;
 }

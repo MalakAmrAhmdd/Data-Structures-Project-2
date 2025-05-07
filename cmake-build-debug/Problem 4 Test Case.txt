@@ -1,0 +1,10 @@
+Ahmed 5 10
+Bassem 5 10
+Carmen 5 9
+Donya 4 10
+Eyad 6 10
+Fawaz 5 11
+Gasser 7 8
+Hossam 3 12
+Islam 6 9
+Jawad 4 11
