@@ -1,8 +1,279 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+struct Contact{
+    int id;
+    string name, phone, email;
+    Contact(int new_id , string new_name, string new_phone, string new_email){
+        id = new_id;
+        name = new_name;
+        phone = new_phone;
+        email = new_email;
+    }
+    Contact(){}
+};
+
+class AVL{
+    struct Node{
+        Contact info;
+        Node* l;
+        Node* r;
+        int bfactor;
+    };
+    Node* root;
+public:
+
+    AVL(): root(nullptr){}
+
+    void rotateToLeft(Node* &rt){ // RR imbalance
+        Node *p;
+        if(rt == NULL){
+            cout << "Error in the tree" << endl;
+        }else if (rt->r == NULL){
+            cout << "Error in the tree: \n";
+            cout << "No right subtree to rotate.\n";
+        }else{
+            p = rt->r;
+            rt->r = p-> l;
+            p->l = rt;
+            rt = p;
+        }
+    }
+    void rotateToRight(Node* &rt){ // LL imbalance
+        Node *p;
+        if(rt == NULL){
+            cout << "Error in the tree" << endl;
+        }else if (rt->l == NULL){
+            cout << "Error in the tree: \n";
+            cout << "No left subtree to rotate.\n";
+        }else{
+            p = rt->l;
+            rt->l = p-> r;
+            p->r = rt;
+            rt = p;
+        }
+    }
+    void balanceFromLeft(Node* &rt){
+        Node *p;
+        Node *w;
+        p = rt->l;
+        switch(p->bfactor){
+            case -1: // LL single Rotation needed
+                rt->bfactor = 0;
+                p->bfactor = 0;
+                rotateToRight(rt);
+                break;
+            case 0:
+                cout << "Error: Cannot balance from the left." << endl;
+            case 1: // LR Case
+                w = p->r;
+                switch (w->bfactor) {
+                    case -1:
+                        rt->bfactor = 1;
+                        p->bfactor = 0;
+                        break;
+                    case 0:
+                        rt->bfactor = 0;
+                        p->bfactor = 0;
+                        break;
+                    case 1:
+                        rt->bfactor = 0;
+                        p->bfactor = -1;
+                }
+                w->bfactor = 0;
+                rotateToLeft(p);
+                rt->l = p;
+                rotateToRight(rt);
+        }
+    }
+    void balanceFromRight(Node* &rt){
+        Node *p;
+        Node *w;
+        p = rt->r;
+        switch(p->bfactor){
+            case -1:
+                w = p->l;
+                switch (w->bfactor) {
+                    case -1:
+                        rt->bfactor = 0;
+                        p->bfactor = 1;
+                        break;
+                    case 0:
+                        rt->bfactor = 0;
+                        p->bfactor = 0;
+                        break;
+                    case 1:
+                        rt->bfactor = -1;
+                        p->bfactor = 0;
+                }
+                w->bfactor = 0;
+                rotateToRight(p);
+                rt->r = p;
+                rotateToLeft(rt);
+            case 0:
+                cout << "Error: Cannot balance from the right." << endl;
+            case 1:
+                rt->bfactor = 0;
+                p->bfactor = 0;
+                rotateToLeft(rt);
+        }
+    }
+
+    void insertionIntoAVL(Node* &rt, Contact data){
+        if(rt == NULL){
+            rt = new Node;
+            rt->info = data;
+            rt->l = NULL;
+            rt->r = NULL;
+            rt->bfactor = 0;
+        }else if(data.id < rt->info.id){
+            insertionIntoAVL(rt->l, data);
+            if(rt->bfactor == 1){
+                balanceFromLeft(rt);
+            }else if(rt->bfactor == 0){
+                rt->bfactor = 1;
+            }else{
+                rt->bfactor = 0;
+            }
+        }else if(data.id > rt->info.id){
+            insertionIntoAVL(rt->r, data);
+            if(rt->bfactor == -1){
+                balanceFromRight(rt);
+            }else if(rt->bfactor == 0){
+                rt->bfactor = -1;
+            }else{
+                rt->bfactor = 0;
+            }
+        }
+    }
+    void insertionIntoAVLHelper(Contact data){
+        insertionIntoAVL(root, data);
+    }
+
+    void search(Contact data){
+        Node* curr;
+        curr = root;
+        while(curr!=NULL){
+            if(data.id > curr->info.id){
+                curr = curr->r;
+            }
+            else if (data.id< curr->info.id){
+                curr = curr->l;
+            }
+            else{
+                cout << "Contact found: " << endl;
+                cout << "ID: " << curr->info.id << endl;
+                cout << "Name: " << curr->info.name << endl;
+                cout << "Phone: " << curr->info.phone << endl;
+                cout << "Email: " << curr->info.email  << endl;
+                return;
+            }
+        }
+        cout << "Contact not found" << endl;
+    }
+
+    void deleteContact(Contact data){
+        Node* curr;
+        Node* tcurr;
+        curr = root;
+        while(curr!=NULL){
+            if(data.id > curr->info.id){
+                tcurr = curr;
+                curr = curr->r;
+            }
+            else if (data.id< curr->info.id){
+                tcurr = curr;
+                curr = curr->l;
+            }
+            else{
+                cout << "Contact found: " << endl;
+                cout << "ID: " << curr->info.id << endl;
+                cout << "Name: " << curr->info.name << endl;
+                cout << "Phone: " << curr->info.phone << endl;
+                cout << "Email: " << curr->info.email  << endl;
+                return;
+            }
+        }
+        cout << "Contact not found" << endl;
+
+    }
+    void listContacts() {
+        listContactsHelper(root);
+    }
+    void listContactsHelper(Node* node) {
+        if (node == NULL) return;
+        listContactsHelper(node->l);
+        cout << "ID: " << node->info.id << ", Name: " << node->info.name
+             << ", Phone: " << node->info.phone << ", Email: " << node->info.email << endl;
+        listContactsHelper(node->r);
+    }
+
+};
+
 int main(){
 
-    cout << "Problem 2 executable" << endl;
-    cout <<"Yassin Elfekhem bimsi 3leko" << endl;
+    cout <<"Address Book Application\n";
+
+    AVL avl;
+    int choice;
+    while(true){
+        cout << "=========================\n";
+        cout << "1. Add Contact\n";
+        cout << "2. Search Contact\n";
+        cout << "3. Delete Contact\n";
+        cout << "4. List Contacts\n";
+        cout << "5. Display Current Tree Structure\n";
+        cout << "6. Exit\n";
+        cout << "=========================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch(choice){
+            case 1:{
+                int id;
+                string name, phone, email;
+                cout << "Enter ID: ";
+                cin >> id;
+                cout << "Enter Name: ";
+                cin >> name;
+                cout << "Enter Phone: ";
+                cin >> phone;
+                cout << "Enter Email: ";
+                cin >> email;
+                Contact newContact(id, name, phone, email);
+                avl.insertionIntoAVLHelper(newContact);
+                break;
+            }
+            case 2:{
+                int id;
+                cout << "Enter ID to search: ";
+                cin >> id;
+                Contact searchContact(id, "", "", "");
+                avl.search(searchContact);
+                break;
+            }
+            case 3: {
+                int idToDelete;
+                cout << "Enter ID to delete: ";
+                cin >> idToDelete;
+                Contact deleteContact(idToDelete, "", "", "");
+                avl.deleteContact(deleteContact);
+                cout << "Contact deleted successfully.\n";
+                break;
+            }
+            case 4:
+                cout<< "List of Contacts:\n";
+                avl.listContacts();
+                break;
+            case 5:
+                // Implement display tree structure functionality
+                break;
+            case 6:
+                cout << "Exiting...\n";
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    }
+
 }
