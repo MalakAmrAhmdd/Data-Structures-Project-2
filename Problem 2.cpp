@@ -177,30 +177,30 @@ public:
         }
     }
 
-    void insertionIntoAVL(Node* &rt, Contact data){
-        if(rt == NULL){
+    void insertionIntoAVL(Node* &rt, Contact data) {
+        if (rt == NULL) {
             rt = new Node;
             rt->info = data;
             rt->l = NULL;
             rt->r = NULL;
             rt->bfactor = 0;
-        }else if(data.id < rt->info.id){
+        } else if (data.id < rt->info.id) {
             insertionIntoAVL(rt->l, data);
-            if(rt->bfactor == 1){
-                balanceFromLeft(rt);
-            }else if(rt->bfactor == 0){
-                rt->bfactor = 1;
-            }else{
+            if (rt->bfactor == 1) {
                 rt->bfactor = 0;
-            }
-        }else if(data.id > rt->info.id){
-            insertionIntoAVL(rt->r, data);
-            if(rt->bfactor == -1){
-                balanceFromRight(rt);
-            }else if(rt->bfactor == 0){
+            } else if (rt->bfactor == 0) {
                 rt->bfactor = -1;
-            }else{
+            } else {
+                balanceFromLeft(rt);
+            }
+        } else if (data.id > rt->info.id) {
+            insertionIntoAVL(rt->r, data);
+            if (rt->bfactor == -1) {
                 rt->bfactor = 0;
+            } else if (rt->bfactor == 0) {
+                rt->bfactor = 1;
+            } else {
+                balanceFromRight(rt);
             }
         }
     }
