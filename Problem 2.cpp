@@ -122,6 +122,7 @@ public:
                 break;
             case 0:
                 cout << "Error: Cannot balance from the left." << endl;
+                break;
             case 1: // LR Case
                 w = p->r;
                 switch (w->bfactor) {
@@ -136,11 +137,13 @@ public:
                     case 1:
                         rt->bfactor = 0;
                         p->bfactor = -1;
+                        break;
                 }
                 w->bfactor = 0;
                 rotateToLeft(p);
                 rt->l = p;
                 rotateToRight(rt);
+                break;
         }
     }
 
@@ -163,17 +166,21 @@ public:
                     case 1:
                         rt->bfactor = -1;
                         p->bfactor = 0;
+                        break;
                 }
                 w->bfactor = 0;
                 rotateToRight(p);
                 rt->r = p;
                 rotateToLeft(rt);
+                break;
             case 0:
                 cout << "Error: Cannot balance from the right." << endl;
+                break;
             case 1:
                 rt->bfactor = 0;
                 p->bfactor = 0;
                 rotateToLeft(rt);
+                break;
         }
     }
 
