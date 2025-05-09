@@ -172,32 +172,8 @@ public:
         }
         cout << "Contact not found" << endl;
     }
+    
 
-    void deleteContact(Contact data){
-        Node* curr;
-        Node* tcurr;
-        curr = root;
-        while(curr!=NULL){
-            if(data.id > curr->info.id){
-                tcurr = curr;
-                curr = curr->r;
-            }
-            else if (data.id< curr->info.id){
-                tcurr = curr;
-                curr = curr->l;
-            }
-            else{
-                cout << "Contact found: " << endl;
-                cout << "ID: " << curr->info.id << endl;
-                cout << "Name: " << curr->info.name << endl;
-                cout << "Phone: " << curr->info.phone << endl;
-                cout << "Email: " << curr->info.email  << endl;
-                return;
-            }
-        }
-        cout << "Contact not found" << endl;
-
-    }
     void listContacts() {
         listContactsHelper(root);
     }
