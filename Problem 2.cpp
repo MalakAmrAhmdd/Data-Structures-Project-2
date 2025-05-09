@@ -208,8 +208,22 @@ public:
              << ", Phone: " << node->info.phone << ", Email: " << node->info.email << endl;
         listContactsHelper(node->r);
     }
-
 };
+
+void readFromFile(AVL &avl, const string &filename) {
+    ifstream file(filename);
+    if (!file) {
+        cerr << "Error opening file: " << filename << endl;
+        return;
+    }
+    int id;
+    string name, phone, email;
+    while (file >> id >> name >> phone >> email) {
+        Contact contact(id, name, phone, email);
+        avl.insertionIntoAVLHelper(contact);
+    }
+    file.close();
+}
 
 int main(){
 
