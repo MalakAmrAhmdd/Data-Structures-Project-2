@@ -87,6 +87,7 @@ public:
                 rotateToRight(rt);
         }
     }
+
     void balanceFromRight(Node* &rt){
         Node *p;
         Node *w;
