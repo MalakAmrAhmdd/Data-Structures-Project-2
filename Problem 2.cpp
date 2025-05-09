@@ -172,7 +172,7 @@ public:
         }
         cout << "Contact not found" << endl;
     }
-    
+
 
     void listContacts() {
         listContactsHelper(root);
@@ -184,6 +184,9 @@ public:
              << ", Phone: " << node->info.phone << ", Email: " << node->info.email << endl;
         listContactsHelper(node->r);
     }
+
+    void BFTraverse(Node* root)
+
 };
 
 void readFromFile(AVL &avl, const string &filename) {
