@@ -14,7 +14,62 @@ struct Contact{
     Contact(){}
 };
 
+
+template <class T>
+class Queue {
+private:
+    struct Node {
+        T* data;
+        Node* next;
+        Node(T* val): data(val), next(NULL){};
+    };
+    Node *head, *tail;
+    int len = 0;
+
+public:
+    Queue() : head(NULL), tail(NULL), len(0) {}
+    int size() {
+        return len;
+    }
+
+    void push(T* val) {
+        Node* newnode = new Node(val);
+        if (head == NULL) {
+            head = newnode;
+            tail = newnode;
+        }
+        else {
+            tail->next = newnode;
+            tail = newnode;
+        }
+        len++;
+    }
+    bool isEmpty(){
+        return len == 0;
+    }
+
+    void pop() {
+        if (len == 0) {
+            cout << "Queue is empty!" << endl;
+        }
+        else {
+            Node* first = head;
+            head = head->next;
+            delete first;
+            len--;
+            if (len == 0) tail = NULL;
+        }
+    }
+
+    T* front() {
+        assert(!isEmpty());
+        return head->data;
+    }
+};
+
+
 class AVL{
+private:
     struct Node{
         Contact info;
         Node* l;
@@ -22,9 +77,10 @@ class AVL{
         int bfactor;
     };
     Node* root;
+    int height = 0;
 public:
-
     AVL(): root(nullptr){}
+
 
     void rotateToLeft(Node* &rt){ // RR imbalance
         Node *p;
@@ -186,9 +242,114 @@ public:
         listContactsHelper(node->r);
     }
 
-    void BFTraverse(Node* root)
+    Node* suc(Node* &rt){
+        while(rt->l!=NULL){
+            rt = rt->l;
+        }
+        return rt;
+    }
+
+    Node* deleteContact(Node* rt,Contact data){
+        if(rt == NULL) return NULL;
+        if(data.id < rt->info.id){
+            rt->l = deleteContact(rt->l , data);
+        }
+        else if(data.id > rt->info.id){
+            rt->r = deleteContact(rt->r,data);
+        }
+        else{
+            if(rt->l == NULL){
+                Node* temp = rt->r;
+                delete rt;
+                return temp;
+            }
+            else if (rt->r == NULL){
+                Node* temp = rt->l;
+                delete rt;
+                return temp;
+            }
+            Node* temp = suc(rt->r);
+            rt->info = temp->info;
+            rt->r = deleteContact(rt->r,temp->info);
+        }
+        return balanceAfterDel(rt);
+    }
+
+    Node* balanceAfterDel(Node* rt){
+        if(rt->bfactor == 2){
+            if(rt->r->bfactor == -1){
+                balanceFromRight(rt);
+            }
+            rt->bfactor = 0;
+        }
+        else if (rt->bfactor == -2){
+            if (rt->r->bfactor == 1){
+                balanceFromLeft(rt);
+            }
+            rt->bfactor = 0;
+        }
+        return rt;
+    }
+
+    void deleteContactHelper(Contact data){
+        root = deleteContact(root , data);
+    }
+
+    int treeHeight(Node *p)
+    {
+        if(p == NULL)
+            return 0;
+        else
+            return 1 + max(treeHeight(p->l), treeHeight(p->r));
+    }
+
+    void updateTreeHeight() {
+        height = treeHeight(root);
+    }
+
+    void displayBFS() {
+        Node *curr = root;
+        if (root == NULL) return;
+
+        Queue<Node> q;
+        int lev = height;
+        q.push(root);
+        while (!q.isEmpty()){
+            q.push(curr);
+            int sz = q.size();
+            while (sz--) {
+                curr = q.front();
+                q.pop();
+                for (int i = 0; i < 3*lev; i++) cout << " ";
+                cout << curr->info.id;
+                if(curr->l != NULL){
+                    q.push(curr->l);
+                }
+                if(curr->r != NULL){
+                    q.push(curr->r);
+                }
+            }
+            cout << endl;
+            for (int i = 0; i < q.size(); i++) {
+                for (int j = 0; j < 3 * (lev) - 2; j++) {
+                    cout << " ";
+                }
+                cout << "/" << "   " << "\\";
+            }
+            cout << endl;
+            lev--;
+
+        }
+    }
+
+    void display() {
+        updateTreeHeight();
+        displayBFS();
+    }
+
 
 };
+
 
 void readFromFile(AVL &avl, const string &filename) {
     ifstream file(filename);
@@ -251,7 +412,7 @@ int main(){
                 cout << "Enter ID to delete: ";
                 cin >> idToDelete;
                 Contact deleteContact(idToDelete, "", "", "");
-                avl.deleteContact(deleteContact);
+                avl.deleteContactHelper(deleteContact);
                 cout << "Contact deleted successfully.\n";
                 break;
             }
@@ -260,7 +421,8 @@ int main(){
                 avl.listContacts();
                 break;
             case 5:
-                // Implement display tree structure functionality
+                cout <<"Tree structure: " << endl << endl;
+                avl.display();
                 break;
             case 6:
                 cout << "Exiting...\n";
