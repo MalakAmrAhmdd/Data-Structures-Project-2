@@ -314,44 +314,71 @@ public:
         height = treeHeight(root);
     }
 
-    void displayBFS() {
-        Node *curr = root;
-        if (root == NULL) return;
+void displayBF() {
+    if (root == NULL) return;
 
-        Queue<Node> q;
-        int lev = height;
-        q.push(root);
-        while (!q.isEmpty()){
-            q.push(curr);
-            int sz = q.size();
-            while (sz--) {
-                curr = q.front();
-                q.pop();
-                for (int i = 0; i < 3*lev; i++) cout << " ";
+    Queue<Node> q;
+    q.push(root);
+    int level = height;
+
+    while (!q.isEmpty()) {
+        int sz = q.size();
+        Node** currentLevel = new Node*[sz]; // Dynamically allocate array for current level
+
+        // Process the current level
+        for (int i = 0; i < sz; i++) {
+            Node* curr = q.front();
+            q.pop();
+            currentLevel[i] = curr;
+
+            // Print spaces for alignment
+            cout << setfill(' ') << setw(6 * level) << ""; // Increased initial spacing
+
+            // Print node value or empty space
+            if (curr != NULL) {
                 cout << curr->info.id;
-                if(curr->l != NULL){
-                    q.push(curr->l);
-                }
-                if(curr->r != NULL){
-                    q.push(curr->r);
-                }
+                q.push(curr->l);
+                q.push(curr->r);
+            } else {
+                cout << " ";
+                q.push(NULL);
+                q.push(NULL);
             }
-            cout << endl;
-            for (int i = 0; i < q.size(); i++) {
-                for (int j = 0; j < 3 * (lev) - 2; j++) {
-                    cout << " ";
-                }
-                cout << "/" << "   " << "\\";
-            }
-            cout << endl;
-            lev--;
-
         }
+        cout << endl;
+
+        // Print branches based on parent alignment
+        for (int i = 0; i < sz; i++) {
+            Node* curr = currentLevel[i];
+            cout << setfill(' ') << setw(6 * level - 3) << ""; // Adjusted branch alignment
+            if (curr != NULL) {
+                cout << (curr->l != NULL ? "/" : " ");
+                cout << setfill(' ') << setw(6) << ""; // Increased spacing between slashes
+                cout << (curr->r != NULL ? "\\" : " ");
+            } else {
+                cout << "      ";
+            }
+        }
+        cout << endl;
+        level--;
+
+        // Stop processing if all nodes in the queue are NULL
+        bool allNull = true;
+        for (int i = 0; i < q.size(); i++) {
+            Node* temp = q.front();
+            q.pop();
+            if (temp != NULL) allNull = false;
+            q.push(temp);
+        }
+        if (allNull) break;
+
+        delete[] currentLevel; // Free dynamically allocated memory
     }
+}
 
     void display() {
         updateTreeHeight();
-        displayBFS();
+        displayBF();
     }
 
 
