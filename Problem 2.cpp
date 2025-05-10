@@ -405,6 +405,7 @@ int main(){
     cout <<"Address Book Application\n";
 
     AVL avl;
+    readFromFile(avl, "Problem 2.txt");
     int choice;
     while(true){
         cout << "=========================\n";
