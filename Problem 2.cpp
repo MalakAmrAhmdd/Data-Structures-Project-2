@@ -292,25 +292,11 @@ void insertionIntoAVL(Node* &rt, Contact data, bool &heightChanged) {
         return balanceAfterDel(rt);
     }
 
-//    Node* balanceAfterDel(Node* rt){
-//        if(rt->bfactor == 2){
-//            if(rt->r->bfactor == -1){
-//                balanceFromRight(rt);
-//            }
-//            rt->bfactor = 0;
-//        }
-//        else if (rt->bfactor == -2){
-//            if (rt->r->bfactor == 1){
-//                balanceFromLeft(rt);
-//            }
-//            rt->bfactor = 0;
-//        }
-//        return rt;
-//    }
+
     Node* balanceAfterDel(Node* rt) {
         if (rt == NULL) return NULL;
 
-        // Update the balance factor
+        
         int leftHeight = treeHeight(rt->l);
         int rightHeight = treeHeight(rt->r);
         rt->bfactor = rightHeight - leftHeight;
