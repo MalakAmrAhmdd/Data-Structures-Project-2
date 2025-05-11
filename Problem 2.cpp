@@ -332,7 +332,8 @@ void displayBF() {
             currentLevel[i] = curr;
 
             // Print spaces for alignment
-            cout << setfill(' ') << setw(6 * level) << ""; // Increased initial spacing
+            if (i == 0) cout << setfill(' ') << setw(5 * level) << ""; // Increased initial spacing
+            else cout << setfill(' ') << setw(3 * level) << "";
 
             // Print node value or empty space
             if (curr != NULL) {
@@ -350,7 +351,9 @@ void displayBF() {
         // Print branches based on parent alignment
         for (int i = 0; i < sz; i++) {
             Node* curr = currentLevel[i];
-            cout << setfill(' ') << setw(6 * level - 3) << ""; // Adjusted branch alignment
+            if (i == 0) cout << setfill(' ') << setw(5 * level - 3) << ""; // Adjusted branch alignment
+            else cout << setfill(' ') << setw(3 * level - 3) << "";
+
             if (curr != NULL) {
                 cout << (curr->l != NULL ? "/" : " ");
                 cout << setfill(' ') << setw(6) << ""; // Increased spacing between slashes
