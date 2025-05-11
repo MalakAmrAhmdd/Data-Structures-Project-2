@@ -152,7 +152,7 @@ public:
         Node *w;
         p = rt->r;
         switch(p->bfactor){
-            case -1:
+            case -1: // RL Case
                 w = p->l;
                 switch (w->bfactor) {
                     case -1:
@@ -184,35 +184,45 @@ public:
         }
     }
 
-    void insertionIntoAVL(Node* &rt, Contact data) {
-        if (rt == NULL) {
-            rt = new Node;
-            rt->info = data;
-            rt->l = NULL;
-            rt->r = NULL;
-            rt->bfactor = 0;
-        } else if (data.id < rt->info.id) {
-            insertionIntoAVL(rt->l, data);
+void insertionIntoAVL(Node* &rt, Contact data, bool &heightChanged) {
+    if (rt == NULL) {
+        rt = new Node;
+        rt->info = data;
+        rt->l = NULL;
+        rt->r = NULL;
+        rt->bfactor = 0;
+        heightChanged = true; // Height of the tree has increased
+    } else if (data.id < rt->info.id) {
+        insertionIntoAVL(rt->l, data, heightChanged);
+        if (heightChanged) {
             if (rt->bfactor == 1) {
                 rt->bfactor = 0;
+                heightChanged = false;
             } else if (rt->bfactor == 0) {
                 rt->bfactor = -1;
             } else {
                 balanceFromLeft(rt);
+                heightChanged = false;
             }
-        } else if (data.id > rt->info.id) {
-            insertionIntoAVL(rt->r, data);
+        }
+    } else if (data.id > rt->info.id) {
+        insertionIntoAVL(rt->r, data, heightChanged);
+        if (heightChanged) {
             if (rt->bfactor == -1) {
                 rt->bfactor = 0;
+                heightChanged = false;
             } else if (rt->bfactor == 0) {
                 rt->bfactor = 1;
             } else {
                 balanceFromRight(rt);
+                heightChanged = false;
             }
         }
     }
-    void insertionIntoAVLHelper(Contact data){
-        insertionIntoAVL(root, data);
+}
+    void insertionIntoAVLHelper(Contact data) {
+    bool heightChanged = false;
+    insertionIntoAVL(root, data, heightChanged);
     }
 
     void search(Contact data){
@@ -282,24 +292,47 @@ public:
         return balanceAfterDel(rt);
     }
 
-    Node* balanceAfterDel(Node* rt){
-        if(rt->bfactor == 2){
-            if(rt->r->bfactor == -1){
-                balanceFromRight(rt);
+//    Node* balanceAfterDel(Node* rt){
+//        if(rt->bfactor == 2){
+//            if(rt->r->bfactor == -1){
+//                balanceFromRight(rt);
+//            }
+//            rt->bfactor = 0;
+//        }
+//        else if (rt->bfactor == -2){
+//            if (rt->r->bfactor == 1){
+//                balanceFromLeft(rt);
+//            }
+//            rt->bfactor = 0;
+//        }
+//        return rt;
+//    }
+    Node* balanceAfterDel(Node* rt) {
+        if (rt == NULL) return NULL;
+
+        // Update the balance factor
+        int leftHeight = treeHeight(rt->l);
+        int rightHeight = treeHeight(rt->r);
+        rt->bfactor = rightHeight - leftHeight;
+
+        // Check for imbalance
+        if (rt->bfactor == 2) { // RR Case
+            if (rt->r->bfactor < 0) { // RL case
+                balanceFromRight(rt->r);
             }
-            rt->bfactor = 0;
-        }
-        else if (rt->bfactor == -2){
-            if (rt->r->bfactor == 1){
-                balanceFromLeft(rt);
+            rotateToLeft(rt);
+        } else if (rt->bfactor == -2) { //LL case
+            if (rt->l->bfactor > 0) { // LR case
+                balanceFromLeft(rt->l);
             }
-            rt->bfactor = 0;
+            rotateToRight(rt);
         }
+
         return rt;
     }
-
     void deleteContactHelper(Contact data){
         root = deleteContact(root , data);
+        updateTreeHeight();
     }
 
     int treeHeight(Node *p)
