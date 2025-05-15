@@ -81,6 +81,7 @@ private:
 public:
     AVL(): root(nullptr){}
 
+    bool isEmpty() {return root == NULL;}
 
     void rotateToLeft(Node* &rt){ // RR imbalance
         Node *p;
@@ -422,71 +423,97 @@ void readFromFile(AVL &avl, const string &filename) {
     file.close();
 }
 
-int main(){
+void processOperationsFromFile(AVL &avl, const string &filename) {
+    ifstream file(filename);
+    if (!file) {
+        cerr << "Error opening input file: " << filename << endl;
+        return;
+    }
 
-    cout <<"Address Book Application\n";
-
-    AVL avl;
-    readFromFile(avl, "Problem 2.txt");
-    int choice;
-    while(true){
-        cout << "=========================\n";
-        cout << "1. Add Contact\n";
-        cout << "2. Search Contact\n";
-        cout << "3. Delete Contact\n";
-        cout << "4. List Contacts\n";
-        cout << "5. Display Current Tree Structure\n";
-        cout << "6. Exit\n";
-        cout << "=========================\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-        switch(choice){
-            case 1:{
+    int operation;
+    while (file >> operation) {
+        switch (operation) {
+            case 1: { // Add Contact
+                cout << "\nOption chosed: " << 1 << " Adding new contact\n";
                 int id;
                 string name, phone, email;
-                cout << "Enter ID: ";
-                cin >> id;
-                cout << "Enter Name: ";
-                cin >> name;
-                cout << "Enter Phone: ";
-                cin >> phone;
-                cout << "Enter Email: ";
-                cin >> email;
-                Contact newContact(id, name, phone, email);
-                avl.insertionIntoAVLHelper(newContact);
+                file >> id;
+                file.ignore(); // Skip newline
+                getline(file, name);
+                getline(file, phone);
+                getline(file, email);
+
+                Contact check(id, "", "", "");
+                stringstream buffer;
+                streambuf* prevcout = cout.rdbuf(buffer.rdbuf());
+                avl.search(check);
+                cout.rdbuf(prevcout);
+
+                if (buffer.str().find("Contact found") != string::npos) {
+                    cout << "Error: Contact with ID " << id << " already exists." << endl;
+                } else {
+                    cout << "Inserting contact " << id << " with\n";
+                    cout << "Name: " << name << '\n';
+                    cout << "Phone number: " << phone << '\n';
+                    cout << "Email: " << email << '\n';
+                    cout << "Into the address book..." << '\n';
+                    Contact contact(id, name, phone, email);
+                    avl.insertionIntoAVLHelper(contact);
+                    cout << "\nContact added successfully." << endl;
+                }
                 break;
             }
-            case 2:{
+            case 2: { // Search
                 int id;
-                cout << "Enter ID to search: ";
-                cin >> id;
-                Contact searchContact(id, "", "", "");
-                avl.search(searchContact);
+                file >> id;
+                cout << "\nOption chosed: " << 2 << " -> Searching for contact with id " << id << '\n';
+                Contact temp(id, "", "", "");
+                avl.search(temp);
                 break;
             }
-            case 3: {
-                int idToDelete;
-                cout << "Enter ID to delete: ";
-                cin >> idToDelete;
-                Contact deleteContact(idToDelete, "", "", "");
-                avl.deleteContactHelper(deleteContact);
-                cout << "Contact deleted successfully.\n";
+            case 3: { // Delete
+                int id;
+                file >> id;
+                cout << "\nOption chosed: " << 2 << " -> Delting contact with id " << id << '\n';
+                Contact temp(id, "", "", "");
+                stringstream buffer;
+                streambuf* prevcout = cout.rdbuf(buffer.rdbuf());
+                avl.search(temp);
+                cout.rdbuf(prevcout);
+
+                if (buffer.str().find("Contact not found") != string::npos) {
+                    cout << "Contact not found." << endl;
+                } else {
+                    avl.deleteContactHelper(temp);
+                    cout << "Contact deleted successfully." << endl;
+                }
                 break;
             }
-            case 4:
-                cout<< "List of Contacts:\n";
-                avl.listContacts();
+            case 4: // List Contacts
+                cout << "Option chosed: " << 4 << " -> Listing All ";
+                cout << "Contacts in Address Book (sorted by ID):" << endl;
+                if (avl.isEmpty()) cout << "Address Book is Empty!" << '\n';
+                else avl.listContacts();
                 break;
-            case 5:
-                cout <<"Tree structure: " << endl << endl;
+
+            case 5: // Display Tree
+                cout << "\nOption chosed: " << 2 << " -> Displaying Current Tree Structure: " << '\n';
                 avl.display();
                 break;
-            case 6:
-                cout << "Exiting...\n";
-                return 0;
+
             default:
-                cout << "Invalid choice. Please try again.\n";
+                cout << "Invalid operation in file: " << operation << endl;
+                break;
         }
     }
 
+    file.close();
+}
+
+
+int main(){
+    cout <<"Address Book Application\n";
+    AVL avl;
+    // readFromFile(avl, "contacts.txt");
+    processOperationsFromFile(avl, "Problem 2.txt");
 }

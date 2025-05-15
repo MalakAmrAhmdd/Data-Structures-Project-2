@@ -1,0 +1,27 @@
+visit github.com
+visit drawio.org
+visit classroom.com
+back
+back
+forward
+visit facebook.com
+back
+visit instagram.com
+visit canva.com
+visit noon.com
+back
+back
+back
+back
+forward
+forward
+visit classroom.com
+visit chatgpt.com
+back
+forward
+visit vjudge.com
+visit codeforces.com
+visit youtube
+back
+forward
+back

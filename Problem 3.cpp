@@ -44,7 +44,7 @@ int main() {
         cout << "The minimum number of segment flips required to turn all elements into 1 is: ";
         cout << ans << endl;
 
-        delete[] arr;  // free memory
+        delete[] arr;
         cout << '\n';
     }
 

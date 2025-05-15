@@ -93,6 +93,7 @@ public:
 };
 
 int main() {
+    //doctor test
     BrowserHistory browser;
     string inputFileName = "Problem_1.txt"; 
 
@@ -119,5 +120,35 @@ int main() {
     }
 
     inputFile.close();
+
+    //added test
+    cout << "\n========================================================\n";
+    cout << "Added test case:\n\n";
+    BrowserHistory browserTest;
+    string testFileName = "Problem 1 Test Case.txt";
+
+    ifstream testFile(testFileName);
+
+    if (!testFile.is_open()) {
+        cerr << "Error opening file!" << endl;
+        return 1;
+    }
+
+    string commandTest, urlTest;
+    while (testFile >> commandTest) {
+        if (commandTest == "visit") {
+            testFile >> urlTest;
+            browserTest.visit(urlTest);
+            cout << "Visited: " << browserTest.getCurrentUrl() << endl;
+        } else if (commandTest == "back") {
+            cout << "Back: " << browserTest.goBack() << endl;
+        } else if (commandTest == "forward") {
+            cout << "Forward: " << browserTest.goForward() << endl;
+        } else {
+            cout << "Invalid commandTest" << endl;
+        }
+    }
+
+    testFile.close();
     return 0;
 }

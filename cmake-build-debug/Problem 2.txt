@@ -1,0 +1,52 @@
+4
+1
+310
+Omar Hassan
+010-876-5432
+omar.hassan@gmail.com
+2
+310
+2
+400
+5
+1
+246
+Malak Amr
+012-345-6789
+malak.amr@gmail.com
+1
+465
+Yassin El Sawy
+011-222-3333
+yassin.sawy@gmail.com
+1
+165
+Abdelrahman Pedro
+0122-334-4455
+abdelrahman.pedro@gmail.com
+1
+246
+Malouk
+012-345-6789
+malak.amr@gmail.com
+1
+234
+Ali Mohamed
+010-567-5678
+ali.mohamed@gmail.com
+4
+2
+165
+2
+100
+2
+246
+3
+234
+2
+234
+3
+310
+5
+
+
